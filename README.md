@@ -152,5 +152,3 @@ A video of a full run, including the UI interaction and the robot, is available 
 - [CPEE Documentation](https://cpee.org/)
 - [Mangler, Juergen, and Stefanie Rinderle-Ma. *Cloud Process Execution Engine: Architecture and Interfaces* (2022)](https://arxiv.org/abs/2208.12214)
 - [Universal Robots URScript Guide](https://www.universal-robots.com/articles/)
-- Robotiq gripper URCap documentation
-- [TUM lab infrastructure](https://lab.bpm.in.tum.de)
