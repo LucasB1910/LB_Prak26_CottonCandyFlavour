@@ -141,12 +141,16 @@ A video of a full run, including the UI interaction and the robot, is available 
 
 ## Credits
 
+- Course: Sustainable Process Automation: Humans, Software, and the Mediator Pattern (TUM)
+- Student: Lucas Bader
+- Supervisor: Dr. Jürgen Mangler
 - **David** built the original cotton candy production process that this project reuses as a subprocess.
 - The **Chair of Information Systems and Business Process Management (TUM)** provides the lab, the UR5 and the CPEE infrastructure.
 
 ## References
 
-- CPEE, Cloud Process Execution Engine: https://cpee.org
-- Universal Robots UR5 user manual and URScript documentation
+- [CPEE Documentation](https://cpee.org/)
+- [Mangler, Juergen, and Stefanie Rinderle-Ma. *Cloud Process Execution Engine: Architecture and Interfaces* (2022)](https://arxiv.org/abs/2208.12214)
+- [Universal Robots URScript Guide](https://www.universal-robots.com/articles/)
 - Robotiq gripper URCap documentation
-- TUM lab infrastructure: https://lab.bpm.in.tum.de
+- [TUM lab infrastructure](https://lab.bpm.in.tum.de)
