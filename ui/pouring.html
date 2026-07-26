@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root{ --rose:#d94f7c; --ink:#1f1d1d; --muted:#9a9189; --cream:#faf5f1; --pink:#f9d0de; --blue:#c8dff5; }
+    *{ box-sizing:border-box } html,body{ margin:0 }
+    body{ min-height:100vh; font-family:'Plus Jakarta Sans',system-ui,sans-serif; color:var(--ink); background-color:var(--cream); background-image: radial-gradient(rgba(217,79,124,0.05) 1px, transparent 1px); background-size:22px 22px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:24px; }
+
+    .stage{ position:relative; width:280px; height:300px; }
+
+    /* Nozzle at the top that pours the sugar */
+    .spout{ position:absolute; left:50%; top:20px; transform:translateX(-50%) rotate(-8deg); width:120px; height:48px; border-radius:16px 16px 24px 24px; background:linear-gradient(180deg,#fff,#efe7e0); box-shadow: inset 0 4px 10px rgba(0,0,0,.06); }
+    /* Small lip where the stream leaves the nozzle */
+    .spout::after{ content:""; position:absolute; left:50%; bottom:-8px; transform:translateX(-50%); width:26px; height:14px; border-radius:0 0 12px 12px; background:linear-gradient(180deg,#f2eae4,#e6dad2); }
+
+    /* Falling stream of sugar */
+    .stream{ position:absolute; left:50%; top:70px; transform:translateX(-50%); width:12px; height:150px; border-radius:8px; background:linear-gradient(180deg, var(--pink), var(--rose)); overflow:hidden; animation: streamPulse 1.2s ease-in-out infinite; }
+    /* Moving highlight so the stream looks like it is flowing */
+    .stream::before{ content:""; position:absolute; inset:0; background:repeating-linear-gradient(180deg, rgba(255,255,255,.55) 0 6px, transparent 6px 16px); animation: pour .6s linear infinite; }
+
+    /* Growing pile of sugar building up at the bottom */
+    .pile{ position:absolute; left:50%; bottom:6px; transform:translateX(-50%); width:150px; height:44px; border-radius:50% 50% 40% 40%; background:radial-gradient(ellipse at 50% 20%, #fde3ec 0%, var(--pink) 55%, var(--rose) 100%); transform-origin:bottom center; animation: heap 3.2s ease-in-out infinite; }
+    /* Soft top edge on the pile */
+    .pile::before{ content:""; position:absolute; left:50%; top:-6px; transform:translateX(-50%); width:70%; height:16px; border-radius:50%; background:#fde3ec; opacity:.85; }
+
+    /* Sugar grains bouncing off the pile */
+    .grain{ position:absolute; bottom:44px; width:6px; height:6px; border-radius:50%; opacity:0; }
+    .grain:nth-child(4){ left:118px; background:var(--pink); animation: bounce 1.4s ease-out infinite 0s; }
+    .grain:nth-child(5){ left:150px; background:var(--blue); animation: bounce 1.4s ease-out infinite .35s; }
+    .grain:nth-child(6){ left:134px; background:var(--rose); animation: bounce 1.4s ease-out infinite .7s; }
+
+    h1{ margin:14px 0 0; font-weight:800; font-size:clamp(22px,3.5vw,30px); text-align:center; }
+    .sub{ margin:4px 0 18px; color:var(--muted); font-weight:500; font-size:15px; text-align:center; }
+
+    /* Indeterminate progress bar */
+    .bar{ width:240px; height:8px; background:#efe6e0; border-radius:99px; overflow:hidden; }
+    .bar-fill{ width:45%; height:100%; border-radius:99px; background:linear-gradient(90deg, transparent, var(--rose), transparent); animation: slide 1.5s ease-in-out infinite; }
+
+    @keyframes pour{ to{ transform:translateY(16px); } }
+    @keyframes streamPulse{ 0%,100%{ transform:translateX(-50%) scaleX(1); } 50%{ transform:translateX(-50%) scaleX(1.25); } }
+    @keyframes heap{ 0%{ transform:translateX(-50%) scaleY(.6); } 50%{ transform:translateX(-50%) scaleY(1); } 100%{ transform:translateX(-50%) scaleY(.6); } }
+    @keyframes bounce{ 0%{ opacity:0; transform:translateY(0) scale(.4); } 15%{ opacity:1; } 100%{ opacity:0; transform:translateY(-22px) translateX(6px) scale(1); } }
+    @keyframes slide{ 0%{ transform:translateX(-120%); } 100%{ transform:translateX(360%); } }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="spout"></div>
+    <div class="stream"></div>
+    <div class="pile"></div>
+    <span class="grain"></span><span class="grain"></span><span class="grain"></span>
+  </div>
+
+  <h1>The robot is pouring in your sugar</h1>
+  <p class="sub">One moment, the sugar is going into the machine.</p>
+  <div class="bar"><div class="bar-fill"></div></div>
+</body>
+</html>

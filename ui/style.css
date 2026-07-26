@@ -1,0 +1,95 @@
+/* ============================================================
+   Cotton Candy Style Guide
+   Gemeinsame Design Tokens und Komponenten fuer alle frames Zellen
+   ============================================================ */
+:root {
+  --primary: #d94f7c;
+  --primary-dark: #c8456f;
+  --surface: #f7f3f0;
+  --ink: #1a1a1a;
+  --muted: #8a8a8a;
+  --line: #e8e8e8;
+  --radius: 14px;
+  --font: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  font-family: var(--font);
+  color: var(--ink);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Haupt Header (eigene Zelle) ---------- */
+.header {
+  height: 100%;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 0 clamp(20px, 4vw, 48px);
+  background: linear-gradient(135deg, #fff 0%, var(--surface) 100%);
+  border-bottom: 1px solid var(--line);
+}
+.header h1 {
+  margin: 0;
+  font-size: clamp(26px, 3.4vw, 44px);
+  font-weight: 800; letter-spacing: -0.02em; line-height: 1.05;
+}
+.header .swatches { display: flex; gap: 8px; margin-top: 12px; }
+.header .swatches span {
+  width: 46px; height: 10px; border-radius: 99px; border: 1px solid rgba(0,0,0,.05);
+}
+
+/* ---------- Abschnitts Header ---------- */
+.section-title {
+  font-size: 13px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--muted); margin: 0 0 12px;
+}
+
+/* ---------- Segmented Control (Einzel / Mix) ---------- */
+.seg {
+  display: flex; background: var(--surface); border-radius: 12px; padding: 5px;
+  width: min(440px, 100%);
+}
+.seg-btn {
+  flex: 1; border: none; background: transparent; color: var(--muted);
+  font-family: inherit; font-weight: 600; font-size: 15px;
+  padding: 11px; border-radius: 9px; cursor: pointer; transition: all .15s;
+}
+.seg-btn.on { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+
+/* ---------- Sorten Buttons ---------- */
+.flavor-grid {
+  display: grid; gap: 14px; margin-top: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.flavor-btn {
+  display: flex; align-items: center; gap: 16px; text-align: left;
+  background: #fff; border: 1.5px solid var(--line); border-radius: 18px;
+  padding: 16px; cursor: pointer; font-family: inherit; transition: border-color .15s, transform .15s;
+}
+.flavor-btn:hover { border-color: #d6d6d6; transform: translateY(-2px); }
+.flavor-btn.sel { border-color: var(--primary); }
+.flavor-btn .swatch { width: 64px; height: 64px; flex: none; border-radius: 12px; border: 1px solid rgba(0,0,0,.05); }
+.flavor-btn .meta { flex: 1; min-width: 0; }
+.flavor-btn .name { display: block; font-weight: 700; font-size: 17px; }
+.flavor-btn .desc { display: block; color: var(--muted); font-size: 13px; margin-top: 2px; }
+.flavor-btn .mark {
+  width: 28px; height: 28px; flex: none; border-radius: 50%;
+  border: 1.5px solid var(--line); display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 13px; font-weight: 700;
+}
+.flavor-btn.sel .mark { background: var(--primary); border-color: var(--primary); }
+
+/* ---------- Mischbalken ---------- */
+.blend { height: 8px; border-radius: 99px; margin-top: 18px; }
+
+/* ---------- Bestaetigen ---------- */
+.confirm-btn {
+  width: min(440px, 100%); margin: 4px auto 0; display: block;
+  border: none; border-radius: 12px; background: var(--primary); color: #fff;
+  font-family: inherit; font-weight: 700; font-size: 16px; padding: 16px; cursor: pointer;
+  transition: background .15s;
+}
+.confirm-btn:hover { background: var(--primary-dark); }
+.confirm-btn:disabled { opacity: .4; cursor: default; }

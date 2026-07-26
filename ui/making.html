@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root{ --rose:#d94f7c; --ink:#1f1d1d; --muted:#9a9189; --cream:#faf5f1; --pink:#f9d0de; --blue:#c8dff5; }
+    *{ box-sizing:border-box } html,body{ margin:0 }
+    body{ min-height:100vh; font-family:'Plus Jakarta Sans',system-ui,sans-serif; color:var(--ink); background-color:var(--cream); background-image: radial-gradient(rgba(217,79,124,0.05) 1px, transparent 1px); background-size:22px 22px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:24px; }
+
+    .stage{ position:relative; width:280px; height:300px; }
+
+    /* Rotating spinner plate suggesting the machine */
+    .bowl{ position:absolute; left:50%; top:120px; transform:translateX(-50%); width:240px; height:60px; border-radius:50%; background:radial-gradient(ellipse at center, #fff 0%, #f0e7e1 70%, #e6dad2 100%); box-shadow: inset 0 6px 14px rgba(0,0,0,.08); }
+    .bowl::after{ content:""; position:absolute; inset:8px; border-radius:50%; border:2px dashed rgba(217,79,124,.25); animation: spin 2.6s linear infinite; }
+
+    /* The fluffy cotton candy cloud */
+    .spin{ position:absolute; left:50%; top:8px; transform:translateX(-50%); width:230px; height:150px; animation: bob 3s ease-in-out infinite; }
+    .cloud{ position:relative; width:100%; height:100%; animation: puff 2.4s ease-in-out infinite; }
+    .cloud span{ position:absolute; border-radius:50%; filter:blur(1px); }
+    .p1{ width:120px; height:120px; left:55px; top:20px; background:var(--pink); }
+    .p2{ width:95px;  height:95px;  left:10px; top:45px; background:#fff; }
+    .p3{ width:100px; height:100px; left:130px; top:42px; background:var(--blue); }
+    .p4{ width:80px;  height:80px;  left:80px; top:0;    background:#fde3ec; }
+    .p5{ width:70px;  height:70px;  left:40px; top:5px;  background:var(--blue); opacity:.85; }
+    .p6{ width:78px;  height:78px;  left:120px; top:10px; background:var(--pink); opacity:.9; }
+
+    /* Paper cone and stick */
+    .cone{ position:absolute; left:50%; top:150px; transform:translateX(-50%); width:60px; height:120px; background:linear-gradient(180deg,#fff,#efe7e0); clip-path: polygon(0 0, 100% 0, 50% 100%); }
+    .cone::before{ content:""; position:absolute; inset:0; background:repeating-linear-gradient(120deg, transparent 0 8px, rgba(217,79,124,.12) 8px 10px); clip-path: polygon(0 0, 100% 0, 50% 100%); }
+
+    /* Rising sugar sparks */
+    .spark{ position:absolute; width:7px; height:7px; border-radius:50%; background:var(--rose); opacity:0; animation: rise 2.8s ease-in infinite; }
+    .spark:nth-child(1){ left:70px;  top:150px; animation-delay:0s;   background:var(--pink); }
+    .spark:nth-child(2){ left:150px; top:150px; animation-delay:.5s;  background:var(--blue); }
+    .spark:nth-child(3){ left:110px; top:150px; animation-delay:1s;   background:var(--rose); }
+    .spark:nth-child(4){ left:90px;  top:150px; animation-delay:1.6s; background:var(--blue); }
+    .spark:nth-child(5){ left:170px; top:150px; animation-delay:2.1s; background:var(--pink); }
+
+    h1{ margin:14px 0 0; font-weight:800; font-size:clamp(22px,3.5vw,30px); text-align:center; }
+    .sub{ margin:4px 0 18px; color:var(--muted); font-weight:500; font-size:15px; text-align:center; }
+
+    /* Indeterminate progress bar */
+    .bar{ width:240px; height:8px; background:#efe6e0; border-radius:99px; overflow:hidden; }
+    .bar-fill{ width:45%; height:100%; border-radius:99px; background:linear-gradient(90deg, transparent, var(--rose), transparent); animation: slide 1.5s ease-in-out infinite; }
+
+    @keyframes spin{ to{ transform:rotate(360deg); } }
+    @keyframes bob{ 0%,100%{ transform:translateX(-50%) translateY(0); } 50%{ transform:translateX(-50%) translateY(-8px); } }
+    @keyframes puff{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.05); } }
+    @keyframes rise{ 0%{ opacity:0; transform:translateY(0) scale(.6); } 20%{ opacity:1; } 100%{ opacity:0; transform:translateY(-130px) scale(1); } }
+    @keyframes slide{ 0%{ transform:translateX(-120%); } 100%{ transform:translateX(360%); } }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="bowl"></div>
+    <div class="spin">
+      <div class="cloud">
+        <span class="p2"></span><span class="p3"></span><span class="p1"></span>
+        <span class="p5"></span><span class="p6"></span><span class="p4"></span>
+      </div>
+    </div>
+    <div class="cone"></div>
+    <span class="spark"></span><span class="spark"></span><span class="spark"></span>
+    <span class="spark"></span><span class="spark"></span>
+  </div>
+
+  <h1>Your cotton candy is being spun</h1>
+  <p class="sub">One moment, the robot is working on it.</p>
+  <div class="bar"><div class="bar-fill"></div></div>
+</body>
+</html>

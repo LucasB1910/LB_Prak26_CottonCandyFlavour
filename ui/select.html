@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root{ --rose:#d94f7c; --rose-soft:#fbe7ee; --rose-border:#f0b9cd; --ink:#1f1d1d; --muted:#9a9189; --line:#ece5df; --card:#fff; --cream:#faf5f1; }
+    *{ box-sizing:border-box } html,body{ margin:0 }
+    body{ min-height:100vh; font-family:'Plus Jakarta Sans',system-ui,sans-serif; color:var(--ink); background-color:var(--cream); background-image: radial-gradient(rgba(217,79,124,0.05) 1px, transparent 1px); background-size:22px 22px; display:flex; align-items:flex-start; justify-content:center; padding:40px 24px 56px; }
+    .wrap{ width:100%; max-width:560px; }
+    .section{ margin-bottom:28px; }
+    .label{ font-size:12px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin:0 0 12px 2px; }
+    .seg{ display:flex; gap:6px; padding:6px; background:#f3ece7; border-radius:14px; }
+    .seg-btn{ flex:1; border:0; background:transparent; cursor:pointer; padding:12px 0; border-radius:10px; font-family:inherit; font-size:15px; font-weight:600; color:var(--muted); transition:all .15s ease; }
+    .seg-btn.on{ background:#fff; color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,.08); }
+    .grid{ display:flex; flex-direction:column; gap:12px; }
+    .flavor-btn{ display:flex; align-items:center; gap:16px; width:100%; text-align:left; border:1.5px solid var(--line); background:var(--card); border-radius:16px; padding:16px 18px; cursor:pointer; font-family:inherit; transition:all .15s ease; }
+    .flavor-btn:hover{ border-color:var(--rose-border); }
+    .flavor-btn.sel{ border-color:var(--rose); background:var(--rose-soft); }
+    .swatch{ width:48px; height:48px; border-radius:12px; flex:none; box-shadow: inset 0 0 0 1px rgba(0,0,0,.06); }
+    .meta{ flex:1; display:flex; flex-direction:column; gap:2px; }
+    .name{ font-size:16px; font-weight:700; color:var(--ink); }
+    .desc{ font-size:13.5px; color:var(--muted); }
+    .mark{ width:26px; height:26px; border-radius:99px; flex:none; border:1.5px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; }
+    .flavor-btn.sel .mark{ background:var(--rose); border-color:var(--rose); }
+    .blend{ height:10px; border-radius:99px; margin-top:14px; }
+    .confirm-btn{ width:100%; border:0; border-radius:14px; padding:16px 0; margin-top:4px; font-family:inherit; font-size:16px; font-weight:700; cursor:pointer; background:var(--rose); color:#fff; transition:all .15s ease; }
+    .confirm-btn:disabled{ background:#eae3dd; color:#b3aaa2; cursor:not-allowed; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="section">
+      <p class="label">Mode</p>
+      <div class="seg">
+        <button type="button" class="seg-btn on" id="mode-single" onclick="setMode('single')">Single</button>
+        <button type="button" class="seg-btn" id="mode-mix" onclick="setMode('mix')">Mix</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <p class="label" id="sorten-title">Choose one flavor</p>
+      <div class="grid" id="grid"></div>
+      <div class="blend" id="blend" style="display:none"></div>
+    </div>
+
+    <div class="section">
+      <button type="button" class="confirm-btn" id="confirm" disabled onclick="confirmSelection()">Confirm</button>
+    </div>
+  </div>
+
+  <script>
+    var FLAVORS = [
+      { id:'cola',            name:'Cola',            desc:'Caramel, dark',          color:'#6b4226' },
+      { id:'strawberry-pink', name:'Strawberry Pink', desc:'Strawberry, vivid pink', color:'#f9d0de' },
+      { id:'blueberry-blue',  name:'Blueberry Blue',  desc:'Blueberry, deep blue',   color:'#c8dff5' }
+    ];
+    var mode='single', selected=[];
+    var grid=document.getElementById('grid');
+    var confirmBtn=document.getElementById('confirm');
+    var blend=document.getElementById('blend');
+    var sortenTitle=document.getElementById('sorten-title');
+
+    function looksLikeCallback(v){ return typeof v==='string' && v.indexOf('http')===0 && v.indexOf('/callbacks/')>-1; }
+
+    // Read callback URL from all possible channels
+    var callbackUrl=null;
+    (function resolve(){
+      if(looksLikeCallback(window.name)){ callbackUrl=window.name; return; }
+      try{ if(window.frameElement && looksLikeCallback(window.frameElement.id)){ callbackUrl=window.frameElement.id; return; } }catch(e){}
+      var qs=new URLSearchParams(location.search);
+      var keys=['callback','cpee_callback','cpee-callback','instance','url'];
+      for(var i=0;i<keys.length;i++){ var v=qs.get(keys[i]); if(looksLikeCallback(v)){ callbackUrl=v; return; } }
+      if(location.hash){ var h=decodeURIComponent(location.hash.slice(1)); if(looksLikeCallback(h)){ callbackUrl=h; return; } }
+    })();
+    window.addEventListener('message', function(ev){
+      var d=ev.data, url=null;
+      if(looksLikeCallback(d)) url=d;
+      else if(d && typeof d==='object' && looksLikeCallback(d.callback)) url=d.callback;
+      if(url && !callbackUrl) callbackUrl=url;
+    });
+    try{ window.parent.postMessage({ request:'callback' }, '*'); }catch(e){}
+
+    function render(){
+      grid.innerHTML='';
+      FLAVORS.forEach(function(f){
+        var i=selected.indexOf(f.id), on=i>=0;
+        var btn=document.createElement('button');
+        btn.type='button'; btn.className='flavor-btn'+(on?' sel':'');
+        btn.onclick=function(){ toggle(f.id); };
+        var mark=(mode==='mix'&&on)?(i+1):(on?'✓':'');
+        btn.innerHTML='<span class="swatch" style="background:'+f.color+'"></span><span class="meta"><span class="name">'+f.name+'</span><span class="desc">'+f.desc+'</span></span><span class="mark">'+mark+'</span>';
+        grid.appendChild(btn);
+      });
+      var valid = mode==='mix' ? selected.length===2 : selected.length===1;
+      confirmBtn.disabled=!valid;
+      sortenTitle.textContent = mode==='mix' ? 'Choose two flavors' : 'Choose one flavor';
+      if(mode==='mix'&&selected.length===2){
+        var c0=FLAVORS.find(function(f){return f.id===selected[0];}).color;
+        var c1=FLAVORS.find(function(f){return f.id===selected[1];}).color;
+        blend.style.display='block'; blend.style.background='linear-gradient(to right,'+c0+','+c1+')';
+      } else { blend.style.display='none'; }
+    }
+    function setMode(m){ mode=m; selected=[]; document.getElementById('mode-single').classList.toggle('on',m==='single'); document.getElementById('mode-mix').classList.toggle('on',m==='mix'); render(); }
+    function toggle(id){
+      if(mode==='single'){ selected=(selected[0]===id)?[]:[id]; return render(); }
+      var i=selected.indexOf(id);
+      if(i>=0) selected.splice(i,1); else if(selected.length<2) selected.push(id);
+      render();
+    }
+
+    function flavorIndex(id){ return FLAVORS.findIndex(function(f){ return f.id===id; }); }
+
+    function confirmSelection(){
+      if(!looksLikeCallback(callbackUrl)){ confirmBtn.disabled=false; return; }
+      var payload={
+        mode:    mode==='mix' ? 1 : 0,
+        flavor1: selected[0] ? flavorIndex(selected[0]) : -1,
+        flavor2: selected[1] ? flavorIndex(selected[1]) : -1
+      };
+      confirmBtn.disabled=true;
+      fetch(callbackUrl,{ method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) })
+        .catch(function(){ confirmBtn.disabled=false; });
+    }
+
+    render();
+  </script>
+</body>
+</html>
