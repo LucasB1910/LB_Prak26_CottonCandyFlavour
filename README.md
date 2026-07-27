@@ -2,7 +2,7 @@
 
 A flavor selection and dosing extension for a robotic cotton candy process, built with a UR5 co-bot and the Cloud Process Execution Engine (CPEE).
 
-Practical Course "Sustainable Process Automation: Humans, Software and the Mediator Pattern", Chair of Information Systems and Business Process Management, Technical University of Munich (TUM-Prak-26-SS).
+Practical Course "Sustainable Process Automation: Humans, Software, and the Mediator Pattern", Chair of Information Systems and Business Process Management, Technical University of Munich (TUM-Prak-26-SS).
 
 Author: Lucas Bader
 
@@ -125,7 +125,7 @@ The UI consists of small self-contained HTML pages in [ui/](ui/), served into th
 
 ## Possible Improvements
 
-- Use the scale that is already part of the cell to weigh the poured sugar and stop by weight instead of by time, which would make the dosing independent of the fill level of the bottles.
+- Use the scale that is already part of the setup to weigh the poured sugar and stop by weight instead of by time, which would make the dosing independent of the fill level of the bottles.
 - Report progress from the robot back into the UI, so the status pages could show real progress instead of an indeterminate animation.
 - Detect an empty or missing bottle before pouring, for example with the gripper feedback.
 
@@ -137,7 +137,7 @@ The UI consists of small self-contained HTML pages in [ui/](ui/), served into th
 
 ## Demo Video
 
-A video of a full run, from the process start in CPEE over the flavor selection to the finished cotton candy, with the web UI and the CPEE process shown alongside the robot: https://youtu.be/pxQCNza1aVs
+A video of a full run, from the process start in CPEE through the flavor selection to the finished cotton candy, with the web UI and the CPEE process shown alongside the robot: https://youtu.be/pxQCNza1aVs
 
 ## Credits
 
