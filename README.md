@@ -1,6 +1,6 @@
 # Cotton Candy Flavor Station
 
-A flavor selection and dosing extension for a robotic cotton candy production cell, built with a UR5 co-bot and the Cloud Process Execution Engine (CPEE).
+A flavor selection and dosing extension for a robotic cotton candy process, built with a UR5 co-bot and the Cloud Process Execution Engine (CPEE).
 
 Practical Course "Sustainable Process Automation: Humans, Software and the Mediator Pattern", Chair of Information Systems and Business Process Management, Technical University of Munich (TUM-Prak-26-SS).
 
@@ -10,7 +10,7 @@ Author: Lucas Bader
 
 ## Abstract
 
-This project extends an existing cotton candy production process, in which a UR5 co-bot operates a cotton candy machine, by a fully automated flavor stage. A customer chooses between three flavored sugars (Cola, Strawberry Pink and Blueberry Blue) on a touch screen and decides whether they want a single flavor or a mix of two. The robot then picks the matching sugar bottle from a 3D printed flavor station, pours the selected amount through a printed funnel into a dosing unit, and hands over to the existing production process, which fills the machine and spins the cotton candy. The whole flow is orchestrated by a CPEE process that synchronizes the user interface, the robot programs and the reused subprocess.
+This project extends an existing cotton candy production process, in which a UR5 co-bot operates a cotton candy machine, by a fully automated flavor stage. A customer chooses between three flavored sugars (Cola, Strawberry Pink and Blueberry Blue) in a simple web UI and decides whether they want a single flavor or a mix of two. The robot then picks the matching sugar bottle from a 3D printed flavor station, pours the selected amount through a printed funnel into a dosing unit, and hands over to the existing production process, which fills the machine and spins the cotton candy. The whole flow is orchestrated by a CPEE process that synchronizes the user interface, the robot programs and the reused subprocess.
 
 ## Motivation
 
@@ -25,14 +25,14 @@ The starting point was David's cotton candy process, which could already produce
 | Flavor station (3D printed) | Holds three sugar bottles at fixed, known positions |
 | Funnels (3D printed) | Screwed onto the bottles, restrict the flow so the pour is dosable |
 | Cotton candy machine | Spins the sugar into cotton candy, operated by the reused subprocess |
-| Touch screen UI (HTML frames) | Flavor and mode selection, live status screens |
+| Web UI (HTML frames) | Flavor and mode selection, live status screens |
 
 ![Flavor station with the three sugar bottles](media/flavor_bottles_closeup.jpeg)
 
 ## Repository Structure
 
 ```
-Prak26_CottonCandyFlavour/
+LB_Prak26_CottonCandyFlavour/
 ├── cpee/                        CPEE process model (XML, BPMN, SVG) and instance properties
 ├── ui/                          HTML frames and shared stylesheet for the customer UI
 ├── robot/
@@ -52,13 +52,13 @@ Prak26_CottonCandyFlavour/
 | Robot | UR5 (Polyscope 5.12), Robotiq gripper URCap |
 | Robot to process interface | Lab REST endpoints for programs and general purpose registers |
 | User interface | Plain HTML, CSS and JavaScript, served as CPEE frames |
-| Hardware design | 3D printed PLA parts (funnels, gripper jaws, bottle holder) |
+| Hardware design | Parts modeled in Onshape, 3D printed in PLA (funnels, gripper collars, bottle holder) |
 
 ## How It Works
 
 The CPEE process `FlavorPouring` (see [cpee/FlavorPouring.xml](cpee/FlavorPouring.xml)) runs through four phases. Phases 1 to 3 each use a parallel block so that the screen and the robot are busy at the same time.
 
-1. **UI setup and homing.** The process initializes a 4 x 6 frame grid on the lab screen. In parallel it serves the header and the selection page (`select.html`) while the robot first moves to the cotton home position (`cottonHome.urp`) and from there to the flavor home position (`flavorHome.urp`), so the robot is already standing in front of the flavor station when the customer confirms.
+1. **UI setup and homing.** The process initializes a 4 x 6 frame grid on your screen. In parallel it serves the header and the selection page (`select.html`) while the robot first moves to the cotton home position (`cottonHome.urp`) and from there to the flavor home position (`flavorHome.urp`), so the robot is already standing in front of the flavor station when the customer confirms.
 2. **Selection.** The selection page lets the customer pick a mode (Single or Mix) and then either one or two flavors. On confirm the page sends `mode` (0 for single, 1 for mix), `flavor1` and `flavor2` as flavor indices (0 = Cola, 1 = Strawberry Pink, 2 = Blueberry Blue) back to the process through the CPEE callback. The process stores them in its data elements and derives `pouring_mode`.
 3. **Pouring.** The process writes the flavor index into the robot's general purpose integer register 0 and the mode into register 1, then starts `FlavourPouring.urp` and waits until the program is done. In the single case this happens once. In the mix case the same sequence runs twice, first with `flavor1`, then with `flavor2`. While the robot pours, the screen shows an animated pouring page.
 4. **Production and done.** The process starts David's cotton candy process as a CPEE subprocess (`behavior: wait_running`), which fills the dosed sugar into the machine and spins the cotton candy, while the screen shows a making page. When the subprocess reports back, a done screen is displayed.
@@ -76,7 +76,7 @@ All programs written for this project live in [robot/lucas/](robot/lucas/) and a
 
 ### Reused subprocess
 
-The cotton candy production itself is David's process, started as a subprocess and left unchanged except for one program. In [robot/david-subprocess/cottonFill.urp](robot/david-subprocess/cottonFill.urp) the gripper now stays closed for a longer time while the sugar is released into the machine. With this change one filling cycle transfers roughly 15 grams of sugar, which matches the amount that the pouring stage doses per customer order. All other programs (machine on and off, heater, motor, the circular spinning motion in `cottonMake.urp` and the final presentation in `cottonDisplay.urp`) are used as provided.
+The cotton candy production itself is David's process, started as a subprocess and left unchanged except for one program. In [robot/david-subprocess/cottonFill.urp](robot/david-subprocess/cottonFill.urp) the gripper now stays closed for a longer time while the sugar is released into the dosing cap in the machine. With this change one filling cycle transfers roughly 15 grams of sugar, which matches the amount that the pouring stage doses per customer order. All other programs (machine on and off, heater, motor, the circular spinning motion in `cottonMake.urp` and the final presentation in `cottonDisplay.urp`) are used as provided.
 
 ## 3D Printed Hardware
 
@@ -86,13 +86,13 @@ The printed parts were the main hardware work of the project and went through se
 
 **Final parts:**
 
-- `final_funnel_7.5mm_opening.stl` screws onto the sugar bottles and restricts the outlet to 7.5 mm. This came out of three iterations: with the 10.5 mm (V3) and 9.5 mm (V2) openings the sugar ran out too fast to dose over hold time, the 7.5 mm opening gives a steady, controllable flow.
+- `final_funnel_9.5mm_opening.stl` screws onto the sugar bottles and restricts the outlet to 9.5 mm. This came out of three iterations: with the 10.5 mm opening the sugar ran out too fast to dose over hold time, the 7.5 mm opening restricted the flow too much, and the 9.5 mm opening gives a steady, controllable flow.
 - `final_sugar_gripper_v2.stl` is a collar mounted on each bottle that gives the Robotiq gripper a defined, repeatable gripping surface, so every bottle is held identically no matter which slot it comes from.
 - `final_sugar_bottle_holder.stl` is the station itself. It holds the three bottles at exactly 90 mm spacing, which is what allows the robot program to compute every bottle position from a single taught pose.
 
 **Archive:**
 
-- `funnel_v3_10.5mm_opening.stl` and `funnel_v2_9.5mm_opening.stl`, the two earlier funnel iterations with larger openings.
+- `funnel_v3_10.5mm_opening.stl` and `funnel_v1_7.5mm_opening.stl`, the two rejected funnel iterations (opening too large and too small).
 - `funnel_early_prototype_26-06.stl`, an early funnel shape test.
 - `sugar_gripper_v1_24.5mm.stl`, the first gripper collar version.
 - `sugar_dosing_cap_v1.stl`, a screw-on dosing cap concept that was dropped in favor of the funnel plus hold time approach.
@@ -101,7 +101,7 @@ The printed parts were the main hardware work of the project and went through se
 
 ## User Interface
 
-The UI consists of small self-contained HTML pages in [ui/](ui/), served into the lab screen grid by the CPEE frames service and sharing one stylesheet (`style.css`).
+The UI consists of small self-contained HTML pages in [ui/](ui/), served into the screen grid by the CPEE frames service and sharing one stylesheet (`style.css`).
 
 - `header.html` shows the title bar with the three flavor colors.
 - `select.html` is the only interactive page. A segmented control switches between Single and Mix, below it the three flavors are listed as cards. In mix mode two flavors have to be picked and a gradient bar previews the blend. The page resolves the CPEE callback URL (from `window.name`, the frame id, query parameters or a postMessage) and sends the selection as a JSON PUT, which completes the waiting service call in the process.
@@ -118,7 +118,7 @@ The UI consists of small self-contained HTML pages in [ui/](ui/), served into th
 ## Results and Lessons Learned
 
 - The full chain from screen input to finished cotton candy runs without manual intervention, for both a single flavor and a two flavor mix.
-- Dosing sugar with a funnel opening plus hold time turned out to be much more reliable than expected, but only after shrinking the opening to 7.5 mm. With the larger openings the poured amount varied too much between runs.
+- Dosing sugar with a funnel opening plus hold time turned out to be much more reliable than expected, but only after tuning the opening to 9.5 mm. With the other openings the poured amount varied too much between runs.
 - Computing the bottle positions from a single taught pose (instead of teaching three separate pick sequences) kept the robot program small and made adding a flavor a matter of one more slot in the holder.
 - Running UI and robot actions in parallel branches noticeably shortens the perceived waiting time, since the robot is already in position when the customer confirms.
 - The extra 1.5 second hold in single mode gives a good approximation of double the amount, so both modes deliver a similar total quantity of sugar.
@@ -142,8 +142,9 @@ A video of a full run, including the UI interaction and the robot, is available 
 ## Credits
 
 - Course: Sustainable Process Automation: Humans, Software, and the Mediator Pattern (TUM)
-- Student: Lucas Bader
+- Student: Lucas Bader, Matriculation No: 03814647
 - Supervisor: Dr. Jürgen Mangler
+- Lab master: Zeka (Zack) Dizdar
 - **David** built the original cotton candy production process that this project reuses as a subprocess.
 - The **Chair of Information Systems and Business Process Management (TUM)** provides the lab, the UR5 and the CPEE infrastructure.
 
