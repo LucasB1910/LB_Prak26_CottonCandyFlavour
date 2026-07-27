@@ -137,7 +137,7 @@ The UI consists of small self-contained HTML pages in [ui/](ui/), served into th
 
 ## Demo Video
 
-A video of a full run, including the UI interaction and the robot, is available here: (link follows)
+A video of a full run, from the process start in CPEE over the flavor selection to the finished cotton candy, with the web UI and the CPEE process shown alongside the robot: https://youtu.be/pxQCNza1aVs
 
 ## Credits
 
